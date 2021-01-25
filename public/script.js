@@ -89,7 +89,7 @@ const shareScreen=()=> {
     
      myVideoStream=stream
      console.log(myVideoStream.getVideoTracks()[0])
-     addVideoStream(myVideo, stream)
+     addVideoStream(myVideo, myVideoStream)
    
 
       screenTrack.onended = function() {
