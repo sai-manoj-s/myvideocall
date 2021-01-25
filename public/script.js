@@ -17,7 +17,7 @@ navigator.mediaDevices.getUserMedia({
   myVideoStream = stream;
   addVideoStream(myVideo, stream)
   myPeer.on('call', call => {
-    call.answer(stream)
+    call.answer(myVideoStreamstream)
     const video = document.createElement('video')
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
@@ -25,7 +25,7 @@ navigator.mediaDevices.getUserMedia({
   })
 
   socket.on('user-connected', userId => {
-    connectToNewUser(userId, stream)
+    connectToNewUser(userId, myVideostream)
   })
   // input value
   let text = $("input");
