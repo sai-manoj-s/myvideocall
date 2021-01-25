@@ -25,7 +25,7 @@ navigator.mediaDevices.getUserMedia({
   })
 
   socket.on('user-connected', userId => {
-    connectToNewUser(userId, myVideostream)
+    connectToNewUser(userId, myVideoStream)
   })
   // input value
   let text = $("input");
