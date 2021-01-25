@@ -1,3 +1,4 @@
+
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
 const myPeer = new Peer(undefined, {
@@ -6,44 +7,22 @@ const myPeer = new Peer(undefined, {
   port: '443'
 })
 let myVideoStream;
-var senders;
-var currentPeer;
-
-
-
 const myVideo = document.createElement('video')
 myVideo.muted = true;
-var peers = []
+const peers = {}
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
 }).then(stream => {
   myVideoStream = stream;
   addVideoStream(myVideo, stream)
-  
-  myPeer.on('calls', call => {
-    console.log(test)
-    currentPeer=call.peerConnection
-    console.log(currentPeer)
+  myPeer.on('call', call => {
     call.answer(stream)
- 
     const video = document.createElement('video')
-    call.on('stream', function(userVideoStream)  {
-     if(!peers.includes(call.peer)){
+    call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
-      console.log("test")
-      currentPeer=call.peerConnection
-      peers.push(call.peer)
-     }
-     
-      
-     
     })
-    
   })
-  
-
-
 
   socket.on('user-connected', userId => {
     connectToNewUser(userId, stream)
@@ -72,20 +51,10 @@ myPeer.on('open', id => {
 })
 
 function connectToNewUser(userId, stream) {
-    call = myPeer.call(userId, stream)
-    currentPeer=call.peerConnection
-    console.log(currentPeer)
-    call.answer(stream)
- 
+  const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   call.on('stream', userVideoStream => {
-    if(!peers.includes(call.peer)){
-      addVideoStream(video, userVideoStream)
-      console.log("test")
-      currentPeer=call.peerConnection
-      peers.push(call.peer)
-     }
-    
+    addVideoStream(video, userVideoStream)
   })
   call.on('close', () => {
     video.remove()
@@ -101,7 +70,7 @@ function addVideoStream(video, stream) {
   })
   videoGrid.append(video)
 }
-console.log(peers)
+
 
 const shareScreen=()=> {
   navigator.mediaDevices.getDisplayMedia({
@@ -130,6 +99,8 @@ const shareScreen=()=> {
     console.log(err)
   })
 }
+
+
 
 const scrollToBottom = () => {
   var d = $('.main__chat_window');
@@ -191,3 +162,4 @@ const setPlayVideo = () => {
   `
   document.querySelector('.main__video_button').innerHTML = html;
 }
+
